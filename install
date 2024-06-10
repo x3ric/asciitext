@@ -1,0 +1,22 @@
+#!/bin/env bash
+need() {
+    if ! command -v "$1" &>/dev/null; then
+        if command -v pacman &>/dev/null; then
+            sudo pacman -Sy --needed --noconfirm "$1"
+        else
+            echo "install $1 with your distro pkgmanager"
+        fi
+    fi
+}
+need git
+need figlet
+git clone https://github.com/X3ric/asciitext
+cd asciitext
+if [[ ":$PATH:" == *":$HOME/.local/bin:"* ]]; then
+    cp "./asciitext" "$HOME/.local/bin"
+else
+    sudo cp "./asciitext" "/usr/bin"
+fi 
+sudo cp ./fonts/* /usr/share/figlet/fonts
+cd ..
+rm -rf asciitext

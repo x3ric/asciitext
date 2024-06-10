@@ -1,0 +1,25 @@
+#!/bin/env bash
+# Ascii Text Generator
+need() {
+    if ! command -v "$1" &>/dev/null; then
+        if ! command -v pacman &>/dev/null; then
+            sudo pacman -Sy --needed --noconfirm "$1"
+        else
+            echo "install $1 with your distro pkgmanager"
+        fi
+    fi
+}
+need fzf
+need figlet
+fzf-splitted () {
+    if [[ -n "$TMUX" ]]; then
+        fzf --color=16 --reverse --ansi "$@"
+    else
+        fzf-tmux --color=16 -x --height ${FZF_TMUX_HEIGHT:-10%} --reverse --cycle --ansi "$@"
+    fi
+}
+[[ -z $1 ]] && text="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890" || text=$1
+\ls /usr/share/figlet/fonts/*.flf | cut -d . -f 1 | while read i; do echo "$i.flf:"; figlet -t -f "$i" "$text"; done | less
+font=$(\ls /usr/share/figlet/fonts/*.flf | cut -d . -f 1 | fzf-splitted)
+[[ -z $font ]] || echo "figlet \"$text\" -f \"$font\""
+[[ -z $font ]] || figlet "$text" -f "$font"
