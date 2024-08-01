@@ -11,7 +11,7 @@ curl -s https://raw.githubusercontent.com/X3ric/asciitext/main/install | bash
 ### Usage
 
 <pre>
-asciitext <text>
+asciitext &lt;text&gt
 </pre>
 
 <p align="center">
